@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VRM Multi-Format Animation Player | 3D Character Pro</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="A professional browser-based 3D character animation player. Support for VRM, MMD (PMX/PMD), FBX, and glTF models with advanced retargeting and expression controls." />
+  <meta name="keywords" content="VRM Player, MMD Player, Three.js, 3D Animation, WebGL, VRMA, VMD, FBX Animation, Mixamo Retargeting" />
+  <meta name="author" content="3D Character Pro" />
+  <meta name="robots" content="index, follow" />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://vrm-multianim-player.vercel.app/" />
+  <meta property="og:title" content="VRM Multi-Format Animation Player" />
+  <meta property="og:description" content="Professional 3D character animation player in your browser. Supports VRM, MMD, FBX, and more." />
+  <meta property="og:image" content="https://vrm-multianim-player.vercel.app/og-image.jpg" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://vrm-multianim-player.vercel.app/" />
+  <meta property="twitter:title" content="VRM Multi-Format Animation Player" />
+  <meta property="twitter:description" content="Professional 3D character animation player for web developers and artists." />
+  <meta property="twitter:image" content="https://vrm-multianim-player.vercel.app/og-image.jpg" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎭</text></svg>">
+  <link rel="stylesheet" href="style.css" />
+  
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/",
+      "@pixiv/three-vrm": "https://cdn.jsdelivr.net/npm/@pixiv/three-vrm@3.5.1/lib/three-vrm.module.js",
+      "@pixiv/three-vrm-animation": "https://cdn.jsdelivr.net/npm/@pixiv/three-vrm-animation@3.5.1/lib/three-vrm-animation.module.js"
+    }
+  }
+  </script>
+</head>
+<body>
+  <main id="app-container">
+    <div id="ui" class="glass-panel">
+      <header>
+        <h2>🎭 Animation Player <span class="badge">PRO</span></h2>
+      </header>
+
+      <section class="control-group">
+        <label for="vrm-input">📂 Avatar (.vrm, .glb, .gltf, .fbx + textures)</label>
+        <div class="file-input-wrapper">
+          <input type="file" id="vrm-input" multiple accept=".vrm,.glb,.gltf,.fbx,.png,.jpg,.jpeg,.tga,.bmp,.psd" />
+        </div>
+
+        <label for="mmd-input">📂 MMD Model (.pmx/.pmd + textures)</label>
+        <div class="file-input-wrapper">
+          <input type="file" id="mmd-input" multiple accept=".pmx,.pmd,.png,.tga,.jpg,.bmp" />
+        </div>
+        
+        <label for="anim-input">🎬 Animation (.fbx, .vrma, .vmd)</label>
+        <div class="file-input-wrapper">
+          <input type="file" id="anim-input" accept=".fbx,.vrma,.vmd" />
+        </div>
+      </section>
+      
+      <section class="playback-controls">
+        <button id="btn-play" title="Play Animation">▶</button>
+        <button id="btn-pause" title="Pause Animation">⏸</button>
+        <button id="btn-stop" title="Stop Animation">⏹</button>
+      </section>
+      
+      <section class="expression-controls">
+        <label class="section-title">🎚️ Expressions</label>
+        <div class="expr-sliders custom-scrollbar">
+          <div class="slider-row">
+            <span>😐</span>
+            <input type="range" id="slider-neutral" min="0" max="2" step="0.1" value="1" class="expr-slider" />
+            <span class="slider-val" id="val-neutral">1.0</span>
+          </div>
+          <div class="slider-row">
+            <span>😊</span>
+            <input type="range" id="slider-happy" min="0" max="2" step="0.1" value="0" class="expr-slider" />
+            <span class="slider-val" id="val-happy">0.0</span>
+          </div>
+          <div class="slider-row">
+            <span>😢</span>
+            <input type="range" id="slider-sad" min="0" max="2" step="0.1" value="0" class="expr-slider" />
+            <span class="slider-val" id="val-sad">0.0</span>
+          </div>
+          <div class="slider-row">
+            <span>😲</span>
+            <input type="range" id="slider-surprised" min="0" max="2" step="0.1" value="0" class="expr-slider" />
+            <span class="slider-val" id="val-surprised">0.0</span>
+          </div>
+          <div class="slider-row">
+            <span>😠</span>
+            <input type="range" id="slider-angry" min="0" max="2" step="0.1" value="0" class="expr-slider" />
+            <span class="slider-val" id="val-angry">0.0</span>
+          </div>
+          <div class="slider-row">
+            <span>😉</span>
+            <input type="range" id="slider-relaxed" min="0" max="2" step="0.1" value="0" class="expr-slider" />
+            <span class="slider-val" id="val-relaxed">0.0</span>
+          </div>
+          <div class="slider-row"><span>😳</span><input type="range" id="slider-shy" min="0" max="2" step="0.1" value="0" class="expr-slider" /><span class="slider-val" id="val-shy">0.0</span></div>
+          <div class="slider-row"><span>😏</span><input type="range" id="slider-smug" min="0" max="2" step="0.1" value="0" class="expr-slider" /><span class="slider-val" id="val-smug">0.0</span></div>
+          <div class="slider-row"><span>😭</span><input type="range" id="slider-sob" min="0" max="2" step="0.1" value="0" class="expr-slider" /><span class="slider-val" id="val-sob">0.0</span></div>
+          <div class="slider-row"><span>😒</span><input type="range" id="slider-annoyed" min="0" max="2" step="0.1" value="0" class="expr-slider" /><span class="slider-val" id="val-annoyed">0.0</span></div>
+          <div class="slider-row"><span>😍</span><input type="range" id="slider-love" min="0" max="2" step="0.1" value="0" class="expr-slider" /><span class="slider-val" id="val-love">0.0</span></div>
+          <div class="slider-row"><span>😴</span><input type="range" id="slider-sleepy" min="0" max="2" step="0.1" value="0" class="expr-slider" /><span class="slider-val" id="val-sleepy">0.0</span></div>
+          <div class="slider-row"><span>🤔</span><input type="range" id="slider-thinking" min="0" max="2" step="0.1" value="0" class="expr-slider" /><span class="slider-val" id="val-thinking">0.0</span></div>
+          <div class="slider-row"><span>🥺</span><input type="range" id="slider-pleading" min="0" max="2" step="0.1" value="0" class="expr-slider" /><span class="slider-val" id="val-pleading">0.0</span></div>
+          <div class="slider-row"><span>😤</span><input type="range" id="slider-huffy" min="0" max="2" step="0.1" value="0" class="expr-slider" /><span class="slider-val" id="val-huffy">0.0</span></div>
+          <div class="slider-row"><span>😈</span><input type="range" id="slider-mischief" min="0" max="2" step="0.1" value="0" class="expr-slider" /><span class="slider-val" id="val-mischief">0.0</span></div>
+          <div class="slider-row"><span>🥴</span><input type="range" id="slider-dizzy" min="0" max="2" step="0.1" value="0" class="expr-slider" /><span class="slider-val" id="val-dizzy">0.0</span></div>
+          <div class="slider-row"><span>😵</span><input type="range" id="slider-faint" min="0" max="2" step="0.1" value="0" class="expr-slider" /><span class="slider-val" id="val-faint">0.0</span></div>
+          <div class="slider-row"><span>🤢</span><input type="range" id="slider-sick" min="0" max="2" step="0.1" value="0" class="expr-slider" /><span class="slider-val" id="val-sick">0.0</span></div>
+          <div class="slider-row"><span>😰</span><input type="range" id="slider-worried" min="0" max="2" step="0.1" value="0" class="expr-slider" /><span class="slider-val" id="val-worried">0.0</span></div>
+          <div class="slider-row"><span>😐</span><input type="range" id="slider-blank" min="0" max="2" step="0.1" value="0" class="expr-slider" /><span class="slider-val" id="val-blank">0.0</span></div>
+          <div class="slider-row"><span>😇</span><input type="range" id="slider-innocent" min="0" max="2" step="0.1" value="0" class="expr-slider" /><span class="slider-val" id="val-innocent">0.0</span></div>
+          <div class="slider-row"><span>😎</span><input type="range" id="slider-cool" min="0" max="2" step="0.1" value="0" class="expr-slider" /><span class="slider-val" id="val-cool">0.0</span></div>
+          <div class="slider-row"><span>🤪</span><input type="range" id="slider-crazy" min="0" max="2" step="0.1" value="0" class="expr-slider" /><span class="slider-val" id="val-crazy">0.0</span></div>
+          <div class="slider-row"><span>😔</span><input type="range" id="slider-disappointed" min="0" max="2" step="0.1" value="0" class="expr-slider" /><span class="slider-val" id="val-disappointed">0.0</span></div>
+          <div class="slider-row"><span>🥰</span><input type="range" id="slider-affection" min="0" max="2" step="0.1" value="0" class="expr-slider" /><span class="slider-val" id="val-affection">0.0</span></div>
+          <div class="slider-row"><span>😑</span><input type="range" id="slider-unamused" min="0" max="2" step="0.1" value="0" class="expr-slider" /><span class="slider-val" id="val-unamused">0.0</span></div>
+        </div>
+        
+        <label class="checkbox-container">
+          <input type="checkbox" id="chk-eye-tracking" checked />
+          <span class="checkmark"></span>
+          👀 Interactive Eye Tracking
+        </label>
+
+        <div class="slider-row eye-offset">
+          <span>↕️</span>
+          <input type="range" id="slider-eye-offset" min="-0.5" max="0.5" step="0.05" value="0.3" class="expr-slider" />
+          <span class="slider-val" id="val-eye-offset">0.3</span>
+        </div>
+      </section>
+      
+      <div id="status" class="status-bar">READY → Load VRM first</div>
+
+      <footer class="usage-tips">
+        <p>💡 <b>Pro Tip:</b> Right-click drag to move character.</p>
+        <p>💡 <b>Scroll:</b> Zoom to focused point.</p>
+      </footer>
+    </div>
+  </main>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
