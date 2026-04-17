@@ -19,6 +19,24 @@ import { FXAAShader } from 'three/addons/shaders/FXAAShader.js';
 const scene = new THREE.Scene();
 scene.background = new THREE.Color('#050505');
 
+// Ground grid for reference - helps see where the floor is
+const gridHelper = new THREE.GridHelper(20, 20, 0x444444, 0x222222);
+gridHelper.position.y = 0;
+scene.add(gridHelper);
+
+// Ground plane (invisible shadow catcher)
+const groundGeometry = new THREE.PlaneGeometry(20, 20);
+const groundMaterial = new THREE.MeshBasicMaterial({ 
+  color: 0x0a0a0a, 
+  transparent: true, 
+  opacity: 0.5,
+  side: THREE.DoubleSide
+});
+const groundPlane = new THREE.Mesh(groundGeometry, groundMaterial);
+groundPlane.rotation.x = -Math.PI / 2;
+groundPlane.position.y = -0.01; // Slightly below grid
+scene.add(groundPlane);
+
 const camera = new THREE.PerspectiveCamera(35, innerWidth / innerHeight, 0.1, 100);
 camera.position.set(0, 1.3, 3);
 
@@ -1015,7 +1033,8 @@ async function loadFBXForVRM(url) {
   console.log('[FBX] clip name:', clip.name, 'duration:', clip.duration);
   console.log('[FBX] track samples:', clip.tracks.slice(0, 5).map(t => t.name));
   
-  // Filter out morph, eye, and head/neck tracks - let our tracking control these
+  // Filter out morph target tracks AND eye/head/neck tracks (we control those manually)
+  // NOTE: We keep SPINE animations intact so sitting/leaning animations work correctly
   const filteredTracks = clip.tracks.filter(t => {
     const name = t.name.toLowerCase();
     return name.includes('morph') || 
@@ -1024,11 +1043,11 @@ async function loadFBXForVRM(url) {
            name.includes('eye') ||  // Skip eye bone animations
            name.includes('head') || // Skip head - we control it
            name.includes('neck') || // Skip neck - we control it
-           name.includes('spine') || // Skip spine - we control body tilt
+           // REMOVED: spine filtering - let animation control spine for proper sitting/leaning
            (!name.includes('.position') && !name.includes('.quaternion') && !name.includes('.scale'));
   });
   if (filteredTracks.length > 0) {
-    console.log('[FBX] Skipping', filteredTracks.length, 'eye/head/neck/spine/morph tracks for 360 tracking');
+    console.log('[FBX] Skipping', filteredTracks.length, 'eye/head/neck/morph tracks (spine kept for animation)');
     clip.tracks = clip.tracks.filter(t => {
       const name = t.name.toLowerCase();
       return !name.includes('morph') && 
@@ -1036,8 +1055,8 @@ async function loadFBXForVRM(url) {
              !name.includes('deform') &&
              !name.includes('eye') &&
              !name.includes('head') &&
-             !name.includes('neck') &&
-             !name.includes('spine');
+             !name.includes('neck');
+             // REMOVED: !name.includes('spine') - keep spine animations
     });
   }
 
