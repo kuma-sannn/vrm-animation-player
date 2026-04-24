@@ -20,7 +20,7 @@ body {
   background: var(--bg-dark);
   color: var(--text-main);
   font-family: var(--font-main);
-  overflow: hidden;
+  overflow: auto;
   height: 100vh;
 }
 
@@ -107,15 +107,7 @@ label {
 }
 
 input[type="file"] {
-  width: 100%;
-  padding: 8px;
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px dashed var(--glass-border);
-  border-radius: 8px;
-  color: var(--text-dim);
-  font-size: 0.7rem;
-  cursor: pointer;
-  transition: var(--transition);
+  display: none;
 }
 
 input[type="file"]:hover {
@@ -311,6 +303,14 @@ input[type="range"]::-webkit-slider-thumb:hover {
   width: 4px;
 }
 
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+html {
+  scrollbar-width: none;
+}
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
@@ -331,4 +331,27 @@ input[type="range"]::-webkit-slider-thumb:hover {
     left: 20px;
     right: 20px;
   }
+}
+
+.custom-file-btn {
+  display: inline-block;
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.custom-file-btn:hover {
+  background: var(--primary);
+  color: #000;
+  box-shadow: 0 0 10px var(--primary-glow);
+}
+
+.file-input-wrapper span {
+  font-size: 0.65rem;
+  color: var(--text-dim);
 }

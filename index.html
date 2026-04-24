@@ -53,20 +53,28 @@
 
       <section class="control-group">
         <label for="vrm-input">📂 Avatar (.vrm, .glb, .gltf, .fbx + textures)</label>
-        <div class="file-input-wrapper">
-          <input type="file" id="vrm-input" multiple accept=".vrm,.glb,.gltf,.fbx,.png,.jpg,.jpeg,.tga,.bmp,.psd" />
-        </div>
+       <div class="file-input-wrapper">
+  <input type="file" id="vrm-input" hidden multiple accept=".vrm,.glb,.gltf,.fbx,.png,.jpg,.jpeg,.tga,.bmp,.psd" />
+  
+  <label for="vrm-input" class="custom-file-btn">Choose File</label>
+  <span id="vrm-name">No file chosen</span>
+</div>
 
         <label for="mmd-input">📂 MMD Model (.pmx/.pmd + textures)</label>
         <div class="file-input-wrapper">
-          <input type="file" id="mmd-input" multiple accept=".pmx,.pmd,.png,.tga,.jpg,.bmp" />
-        </div>
+  <input type="file" id="mmd-input" hidden multiple accept=".pmx,.pmd,.png,.tga,.jpg,.bmp" />
+  
+  <label for="mmd-input" class="custom-file-btn">Choose File</label>
+  <span id="mmd-name">No file chosen</span>
+</div>
         
         <label for="anim-input">🎬 Animation (.fbx, .vrma, .vmd)</label>
         <div class="file-input-wrapper">
-          <input type="file" id="anim-input" accept=".fbx,.vrma,.vmd" />
-        </div>
-      </section>
+  <input type="file" id="anim-input" hidden accept=".fbx,.vrma,.vmd" />
+  
+  <label for="anim-input" class="custom-file-btn">Choose File</label>
+  <span id="anim-name">No file chosen</span>
+</div>
       
       <section class="playback-controls">
         <button id="btn-play" title="Play Animation">▶</button>
